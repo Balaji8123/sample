@@ -1,0 +1,1455 @@
+LoginForm.vb:
+Imports System.Data.SqlClient
+Imports System.Drawing.Drawing2D
+
+PublicClassLoginForm1
+Dim TXT AsString
+Dim Count AsInteger
+Dim LL, II, PP AsInteger
+DimstrAsString
+
+PrivateSub OK_Click(ByVal sender As System. Object, ByVal e As Sys-tem.EventArgs) Handles OK.Click
+
+
+If Conn. State = ConnectionState.Open Then Conn. Close ()
+        Conn. Open ()
+
+
+
+Dim Cmd0 AsNewSqlCommand ("select * from Logintab where uname='"&UCase (UsernameTextBox.Text) &"' and pword='"& Pass-wordTextBox.Text &"'", Conn)
+Dim D1 AsSqlDataReader = Cmd0.ExecuteReader ()
+
+
+If D1.HasRows and TxtReg.Text = strThen
+MDIParent1.Show()
+Me.Hide ()
+If Conn. State = ConnectionState.Open Then Conn. Close ()
+Else
+            MsgBox ("Username or Password or captcha is not correct please check")
+EndIf
+EndSub
+
+PrivateSub Cancel_Click (ByVal sender As System. Object, ByVal e As System.EventArgs)
+Me. Close ()
+EndSub
+
+PrivateSub LoginForm1_Load (ByVal sender As System. Object, ByVal e As System.EventArgs) HandlesMyBase.Load
+        TXT = "STUDENT ATTENENDANCE SYSTEM"
+        LL = Len (TXT)
+        II = 1
+        PP = 1
+Dim NumCaptcha AsString = "123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz"
+Str = ""
+Dim R asNewRandom
+For i AsInteger = 0 To 5
+str = str + NumCaptcha (R.Next (0, 60))
+Next
+Dim b asNewBitmap (274, 71, Imaging.PixelFormat.Format32bppArgb)
+Dim g asGraphics = Graphics.FromImage (b)
+Dim Hb asNewHatchBrush (HatchStyle.DottedDiamond, Color.FromArgb (255, 128, 0), Color.Black)
+        g.DrawString (Str, NewFont ("Curlz MT", 40, FontStyle.Strikeout, GraphicsUnit.Point), Brushes.White, 5, 5)
+        picCaptcha.Image = b
+EndSub
+
+PrivateSub Button1_Click (ByVal sender As System. Object, ByVal e As System.EventArgs) Handles Button1.Click
+Dim NumCaptcha AsString = "123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz"
+Str = ""
+Dim R asNewRandom
+For i asInteger = 0 To 5
+str = str + NumCaptcha (R.Next (0, 60))
+Next
+Dim b asNewBitmap (274, 71, Imaging.PixelFormat.Format32bppArgb)
+Dim g AsGraphics = Graphics.FromImage (b)
+Dim Hb asNewHatchBrush (HatchStyle.DottedDiamond, Color.FromArgb (255, 128, 0), Color.Black)
+        g.DrawString (Str, NewFont("Curlz MT", 40, FontStyle.Strikeout, GraphicsUnit.Point), Brushes.White, 5, 5)
+        piccaptcha.Image = b
+
+
+        Txtreg.Text = ""
+EndSub
+
+
+PrivateSub Timer1_Tick_1 (ByVal sender As System. Object, ByVal e As System.EventArgs) Handles Timer1.Tick
+        Label1.Text = Label1.Text + Mid (TXT, II, 1)
+If II > LL Then
+            II = 0
+            Label1.Text = ""
+EndIf
+        II = II + 1
+EndSub
+EndClass
+
+
+Module.vb:
+Public Conn AsNewSqlConnection ("Data Source=.\SQLEXPRESS;AttachDbFilename=|DataDirectory|\pro1.mdf;Integrated Security=True; User Instance=True")
+Public SqlStr, q1Var, q2Var AsString
+
+EndModule
+
+
+MdiParent1.vb:
+
+Imports System.Windows.Forms
+
+PublicClassMDIParent1
+
+PrivateSubShowNewForm (ByVal sender AsObject, ByVal e AsEventArgs)
+Dim Child Form AsNew System.Windows.Forms. Form
+        ChildForm.MdiParent = Me
+
+        m_ChildFormNumber += 1
+        ChildForm.Text = "Window”& m_ChildFormNumber
+
+        ChildForm.Show ()
+EndSub
+
+
+PrivateSub OpenFile (ByVal sender AsObject, ByVal e AsEventArgs)
+Dim OpenFileDialog asNewOpenFileDialog
+        OpenFileDialog.InitialDirectory = My.Computer.FileSystem.SpecialDirectories.MyDocuments
+OpenFileDialog. Filter = "Text Files (*.txt)|*.txt|All Files (*.*)|*.*"
+If (OpenFileDialog.ShowDialog (Me) = Sys-tem.Windows.Forms.DialogResult.OK) Then
+Dim FileName asString = OpenFileDialog. FileName
+EndIf
+EndSub
+
+
+
+PrivateSub SaveAsToolStripMenuItem_Click (ByVal sender AsObject, ByVal e AsEventArgs)
+Dim SaveFileDialog asNewSaveFileDialog
+        SaveFileDialog.InitialDirectory = My.Computer.FileSystem.SpecialDirectories.MyDocuments
+        SaveFileDialog.Filter = "Text Files (*.txt)|*.txt|All Files (*.*)|*.*"
+
+If (SaveFileDialog.ShowDialog (Me) = Sys-tem.Windows.Forms.DialogResult.OK) Then
+Dim FileName asString = SaveFileDialog. FileName
+EndIf
+EndSub
+
+
+
+PrivateSub ExitToolsStripMenuItem_Click (ByVal sender AsObject, ByVal e AsEventArgs)
+Me. Close ()
+EndSub
+
+PrivateSub CloseAllToolStripMenuItem_Click (ByVal sender AsObject, ByVal e AsEventArgs)
+
+ForEach Child Form AsFormInMe.MdiChildren
+            ChildForm.Close ()
+Next
+EndSub
+
+
+PrivateSub MDIParent1_Load (ByVal sender As System. Object, ByVal e As System.EventArgs) HandlesMyBase.Load
+
+Me.WindowState = FormWindowState.Maximized
+Me.Hide ()
+EndSub
+
+PrivateSub QualificationToolStripMenuItem1_Click (ByVal sender As System. Object, ByVal e As System.EventArgs)
+CourseForm.Show ()
+
+EndSub
+
+
+PrivateSub CourseDetailsToolStripMenuItem_Click (ByVal sender As System. Object, ByVal e As System.EventArgs) Handles CourseDetail-sToolStripMenuItem.Click
+CourseForm.MdiParent = Me
+CourseForm.Show()
+EndSub
+
+PrivateSub SubjectDetailsToolStripMenuItem_Click (ByVal sender As System. Object, ByVal e As System.EventArgs) Handles SubjectDetail-sToolStripMenuItem.Click
+SubjectForm.MdiParent = Me
+SubjectForm.Show ()
+EndSub
+
+PrivateSub StaffDetailsToolStripMenuItem_Click (ByVal sender As Sys-tem. Object, ByVal e As System.EventArgs) Handles StaffDetailsTool-StripMenuItem.Click
+Staff.MdiParent = Me
+Staff. Show ()
+EndSub
+
+PrivateSub StudentDetailsToolStripMenuItem_Click (ByVal sender As System. Object, ByVal e As System.EventArgs) Handles StudentDetail-sToolStripMenuItem.Click
+Studentdeltails.MdiParent = Me
+Studentdeltails.Show ()
+EndSub
+
+PrivateSub StudentAttendanceToolStripMenuItem_Click (ByVal sender As System. Object, ByVal e As System.EventArgs) Handles StudentAttend-anceToolStripMenuItem.Click
+Stu_Attendance.MdiParent = Me
+Stu_Attendance.Show ()
+EndSub
+
+PrivateSub ReportToolStripMenuItem_Click (ByVal sender AsSystem. Ob-ject, ByVal e As System.EventArgs) Handles ReportToolStripMenu-Item.Click
+Staff_Attendence.MdiParent = Me
+Staff_Attendence.Show ()
+EndSub
+
+PrivateSub StaffAttendenceLi8stToolStripMenuItem_Click (ByVal sender As System. Object, ByVal e as System.EventArgs) Handles StaffAttend-enceLi8stToolStripMenuItem.Click
+Staff_Attendence_List.MdiParent = Me
+Staff_Attendence_List.Show ()
+EndSub
+
+PrivateSub ReportToolStripMenuItem1_Click (ByVal sender As System. Object, ByVal e As System.EventArgs) Handles ReportToolStripMenu-Item1.Click
+
+EndSub
+
+PrivateSub StaffListToolStripMenuItem_Click (ByVal sender AsSystem. Object, ByVal e As System.EventArgs) Handles StaffListToolStripMenu-Item.Click
+Staff_list.MdiParent = Me
+Staff_list.Show ()
+EndSub
+
+PrivateSub StaffAttendenceSummaryToolStripMenuItem_Click (ByVal sender AsSystem. Object, ByVal e As System.EventArgs) Handles Staf-fAttendenceSummaryToolStripMenuItem.Click
+Staff_Attendance_Summary.MdiParent = Me
+Staff_Attendance_Summary.Show ()
+EndSub
+
+PrivateSub StudentListToolStripMenuItem_Click (ByVal sender As-System. Object, ByVal e As System.EventArgs) Handles Student-ListToolStripMenuItem.Click
+Student_List.MdiParent = Me
+Student_List.Show ()
+EndSub
+
+PrivateSub StudentAttendenceListToolStripMenuItem_Click (ByVal send-er AsSystem. Object, ByVal e As System.EventArgs) Handles StudentAt-tendenceListToolStripMenuItem.Click
+Student_Attendance_List.MdiParent = Me
+Student_Attendance_List.Show ()
+EndSub
+
+PrivateSub StudentAttendenceSummaryToolStripMenuItem_Click (ByVal sender AsSystem. Object, ByVal e As System.EventArgs) Handles Stu-dentAttendenceSummaryToolStripMenuItem.Click
+Student_Attendance_Summary.MdiParent = Me
+Student_Attendance_Summary.Show ()
+EndSub
+
+PrivateSub MasterEntriesToolStripMenuItem_Click (ByVal sender As-System. Object, ByVal e as System.EventArgs) Handles MasterEn-triesToolStripMenuItem.Click
+
+EndSub
+EndClass
+
+
+CourseForm.vb:
+
+Imports System.Data.SqlClient
+Imports System.Text.RegularExpressions
+
+PublicClassCourse Form
+Dim pkVar AsString
+
+PrivateSub Button2_Click (ByVal sender AsSystem. Object, ByVal e As System.EventArgs) Handles Butsave.Click
+Save Records ()
+EndSub
+Subsave Records ()
+If TextBox1.Text = ""Then
+MsgBox ("Please enter the necessary details")
+Exit Sub
+EndIf
+IfConn. State = ConnectionState.Open ThenConn. Close ()
+Conn. Open ()
+Dim Cmd0 AsNewSqlCommand ("select * from Course Form where Course Name='"&UCase (TextBox1.Text) &"'", Conn)
+Dim D1 AsSqlDataReader = Cmd0.ExecuteReader ()
+If D1.HasRows Then
+MsgBox ("This record is already present in the database")
+IfConn. State = ConnectionState.Open ThenConn. Close ()
+Exit Sub
+EndIf
+
+IfConn. State = ConnectionState.Open ThenConn. Close ()
+Conn. Open ()
+        q1Var = "insert into Course Form ("
+        q2Var = " values (“
+        q1Var = q1Var &"Course Name"&","
+        q2Var = q2Var &"'"&UCase (TextBox1.Text) &"',"
+        q1Var = q1Var &"Details"&")"
+        q2Var = q2Var &"'"& TextBox2.Text &"')"
+Dim Cmd1 AsNewSqlCommand (q1Var & q2Var, Conn)
+Cmd1.ExecuteNonQuery ()
+IfConn. State = ConnectionState.Open ThenConn. Close ()
+
+MsgBox (" record saved successfully")
+        TextBox1.Text = ""
+        TextBox2.Text = ""
+EndSub
+
+PrivateSub Button5_Click (ByVal sender AsSystem. Object, ByVal e As System.EventArgs) Handles Button5.Click
+DisRecords()
+EndSub
+SubDisRecords ()
+IfConn. State = ConnectionState.Open ThenConn. Close ()
+Conn. Close ()
+Dim DS1 AsNewDataset
+DimadpAsNewSqlDataAdapter ("select CourseName, Details from Course Form ", Conn)
+adp. Fill (DS1)
+        DG1.DataSource = DS1.Tables (0)
+IfConn. State = ConnectionState.Open ThenConn. Close ()
+EndSub
+
+PrivateSub Button1_Click (ByVal sender AsSystem. Object, ByVal e As System.EventArgs) Handles Butnew.Click
+        TextBox1.Text = ""
+        TextBox2.Text = ""
+EndSub
+
+PrivateSub Button4_Click_1(ByVal sender AsSystem. Object, ByVal e As System.EventArgs) Handles Butdel.Click
+
+If vbNo = MsgBox ("are you sure you want delete this record", MsgBoxStyle.YesNo, "Delete") ThenExit Sub
+IfConn. State = ConnectionState.Open ThenConn. Close ()
+Conn. Open ()
+Dim Cmd1 AsNewSqlCommand ("delete from Course Form where Course Name='"& pkVar &"'", Conn)
+Cmd1.ExecuteNonQuery ()
+IfConn. State = ConnectionState.Open ThenConn. Close ()
+DisRecords ()
+        Butnew.Enabled = True
+        Butsave.Enabled = False
+        Butmod.Enabled = False
+        Butdel.Enabled = False
+EndSub
+
+PrivateSub DG1_CellContentClick (ByVal sender AsSystem. Object, ByVal e As System.Windows.Forms.DataGridViewCellEventArgs) Handles DG1.CellContentClick
+
+PkVar = DG1.CurrentRow.Cells (0).Value
+If Conn.State = ConnectionState.Open ThenConn. Close ()
+Conn.Open ()
+Dim Cmd0 AsNewSqlCommand ("select * from Course Form where Course Name='"& pkVar &"'", Conn)
+Dim D1 asSqlDataReader = Cmd0.ExecuteReader ()
+If D1.HasRows Then
+D1.Read ()
+            TextBox1.Text = D1 (0).To String
+            TextBox2.Text = D1 (1).To String
+            Butnew.Enabled = True
+            Butsave.Enabled = False
+            Butmod.Enabled = True
+            Butdel.Enabled = True
+Else
+            TextBox1.Text = ""
+            TextBox2.Text = ""
+            Butnew.Enabled = True
+            Butsave.Enabled = False
+            Butmod.Enabled = False
+            Butdel.Enabled = False
+EndIf
+IfConn. State = ConnectionState.Open ThenConn. Close()
+EndSub
+
+PrivateSub Butmod_Click (ByVal sender AsSystem. Object, ByVal e As System.EventArgs) Handles Butmod.Click
+
+If vbNo = MsgBox ("are you sure you want modify this record", MsgBoxStyle.YesNo, "Delete") Then
+Exit Sub
+EndIf
+
+IfConn. State = ConnectionState.Open ThenConn. Close ()
+Conn. Open ()
+Dim Cmd1 AsNewSqlCommand ("delete from Course Form where Course Name='"& pkVar &"'", Conn)
+Cmd1.ExecuteNonQuery ()
+IfConn. State = ConnectionState.Open ThenConn. Close ()
+Conn.Open ()
+SaveRecords ()
+        Butnew.Enabled = True
+        Butsave.Enabled = False
+        Butmod.Enabled = False
+        Butdel.Enabled = False
+EndSub
+
+PrivateSub Button6_Click (ByVal sender AsSystem. Object, ByVal e As System.EventArgs) Handles Button6.Click
+Me. Close ()
+EndSub
+
+
+
+PrivateSub CourseForm_Load (ByVal sender AsSystem. Object, ByVal e As System.EventArgs) HandlesMyBase.Load
+DisRecords ()
+Me.WindowState = FormWindowState.Maximized
+EndSub
+
+PrivateSub TextBox1_LostFocus (ByVal sender AsObject, ByVal e As System.EventArgs) Handles TextBox1.LostFocus
+IfNotRegex.Match (TextBox1.Text, "^ [a-z. ]*$", Regex-Options.IgnoreCase).Success Then
+MsgBox ("please enter alpha text only!")
+TextBox2.Focus ()
+TextBox2.Clear ()
+
+EndIf
+EndSub
+
+
+EndClass
+
+Staff.vb:
+
+
+Imports System.Data.SqlClient
+Imports System.IO
+Imports System.Text.RegularExpressions
+Imports System
+ImportsSystem. Threading
+Imports System.IO.Ports
+Imports System.ComponentModel
+
+PublicClassStaff
+Dim pKVar AsString
+DelegateSubSetTextCallback (ByVal [text] AsString) 'Added to prevent threading errors during receiving of data
+
+
+PrivateSub Button6_Click_1(ByVal sender AsSystem. Object, ByVal e As System.EventArgs) Handles Button6.Click
+
+
+SerialPort1.Close ()
+Me. Close ()
+EndSub
+
+
+PrivateSub SerialPort1_DataReceived (ByVal sender AsSystem. Object, ByVal e As System.IO.Ports.SerialDataReceivedEventArgs) Handles Se-rialPort1.DataReceived
+
+Received Text (SerialPort1.ReadExisting ())
+
+EndSub
+PrivateSubReceived Text (ByVal [text] AsString) 'input from Read Ex-isting
+
+IfMe.TextBox8.InvokeRequired Then
+Dim x AsNewSetTextCallback (AddressOfReceived Text)
+Me. Invoke(x, NewObject () {(text)})
+Else
+Me.TextBox8.Text &= [text] 'append text
+EndIf
+
+EndSub
+
+SubNewRec ()
+
+If Conn.State = ConnectionState.Open ThenConn. Close ()
+Conn. Open ()
+Dim Cmd0 AsNewSqlCommand ("select max (Staff Code) from Staff1", Conn)
+Dim D1 AsSqlDataReader = Cmd0.ExecuteReader ()
+If D1.HasRows Then
+D1.Read ()
+            TextBox1.Text = If (IsDBNull (D1 (0)), 10000000, D1 (0)) + 1
+Else
+            TextBox1.Text = "10001"
+EndIf
+TextBox2.Focus ()
+EndSub
+PrivateSubStaff Load (ByVal sender AsSystem. Object, ByVal e As Sys-tem.EventArgs) HandlesMyBase.Load
+        SerialPort1.PortName = "COM4"
+        SerialPort1.BaudRate = "9600"
+SerialPort1.Open ()
+
+Me.WindowState = FormWindowState.Maximized
+DisRecords ()
+NewRec ()
+EndSub
+
+PrivateSub TextBox2_LostFocus (ByVal sender AsObject, ByVal e As System.EventArgs) Handles TextBox2.LostFocus
+IfNotRegex.Match (TextBox2.Text, "^[a-z. ]*$", Regex-Options.IgnoreCase).Success Then
+MsgBox ("please enter alpha text only!")
+TextBox2.Focus ()
+TextBox2.Clear ()
+
+EndIf
+EndSub
+PrivateSub TextBox7_LostFocus (ByVal sender AsObject, ByVal e As System.EventArgs) Handles TextBox7.LostFocus
+IfNotRegex.Match (TextBox7.Text, "^ [a-z.@.0-9]*$", Regex-Options.IgnoreCase).Success Then
+MsgBox ("please enter alpha numeric text only!")
+TextBox7.Focus ()
+TextBox7.Clear ()
+EndIf
+EndSub
+PrivateSub TextBox6_LostFocus (ByVal sender AsObject, ByVal e As System.EventArgs) Handles TextBox6.LostFocus
+DimPhone NumberAsNewRegex ("^ ([6-9]{1}) ([0-9]{9})")
+        TextBox6.MaxLength = 10
+
+IfPhoneNumber.IsMatch (TextBox6.Text) Then
+TextBox7.Focus ()
+Else
+MsgBox ("Not Valid Phone Number")
+            TextBox6.Text = ""
+TextBox6.Focus ()
+EndIf
+EndSub
+
+PrivateSub DG1_CellContentClick (ByVal sender AsSystem. Object, ByVal e As System.Windows.Forms.DataGridViewCellEventArgs) Handles DG1.CellContentClick
+PKVar = DG1.CurrentRow.Cells (0).Value
+IfConn. State = ConnectionState.Open ThenConn. Close ()
+Conn. Open ()
+Dim Cmd0 AsNewSqlCommand ("select * from Staff1 where Card Num-ber='"& pKVar &"'", Conn)
+Dim D1 AsSqlDataReader = Cmd0.ExecuteReader ()
+If D1.HasRows Then
+D1.Read ()
+            TextBox8.Text = D1 (0).ToString
+            TextBox1.Text = D1 (1).ToString
+            TextBox2.Text = D1 (2).ToString
+            TextBox3.Text = D1 (3).ToString
+            TextBox4.Text = D1 (4).ToString
+            TextBox5.Text = D1 (5).ToString
+            TextBox6.Text = D1 (6).ToString
+            TextBox7.Text = D1 (7).ToString
+            ComboBox1.Text = D1 (8).ToString
+            ComboBox2.Text = D1 (9).ToString
+            Butnew.Enabled = True
+            Butsave.Enabled = False
+            Butmod.Enabled = True
+            Butdel.Enabled = True
+Else
+            TextBox1.Text = ""
+            TextBox2.Text = ""
+            Butnew.Enabled = True
+            Butsave.Enabled = False
+            Butmod.Enabled = False
+            Butdel.Enabled = False
+EndIf
+IfConn. State = ConnectionState.Open ThenConn. Close ()
+EndSub
+
+PrivateSub Butdel_Click (ByVal sender AsSystem. Object, ByVal e As System.EventArgs) Handles Butdel.Click
+If vbNo = MsgBox ("are you sure you want delete this record", MsgBoxStyle.YesNo, "Delete") ThenExit Sub
+IfConn. State = ConnectionState.Open ThenConn. Close ()
+Conn. Open ()
+Dim Cmd1 AsNewSqlCommand ("delete from Staff1 where Card Number='"& pKVar &"'", Conn)
+Cmd1.ExecuteNonQuery ()
+IfConn. State = ConnectionState.Open ThenConn. Close ()
+DisRecords ()
+        Butnew.Enabled = True
+        Butsave.Enabled = False
+        Butdel.Enabled = False
+        Butmod.Enabled = False
+EndSub
+
+PrivateSub Butnew_Click (ByVal sender AsSystem. Object, ByVal e As System.EventArgs) Handles Butnew.Click
+        TextBox8.Text = ""
+NewRec ()
+        TextBox2.Text = ""
+        TextBox3.Text = ""
+        TextBox4.Text = ""
+        TextBox5.Text = ""
+        TextBox6.Text = ""
+        TextBox7.Text = ""
+        ComboBox1.Text = ""
+        ComboBox2.Text = ""
+EndSub
+
+PrivateSub Butsave_Click (ByVal sender AsSystem. Object, ByVal e As System.EventArgs) Handles Butsave.Click
+Save Records ()
+EndSub
+Subsave Records ()
+If TextBox1.Text = ""Then
+MsgBox ("Please enter the necessary details")
+Exit Sub
+EndIf
+IfConn. State = ConnectionState.Open ThenConn. Close ()
+Conn. Open ()
+Dim Cmd0 AsNewSqlCommand ("select * from Staff1 where Card Num-ber='"&UCase(TextBox1.Text) &"'", Conn)
+Dim D1 AsSqlDataReader = Cmd0.ExecuteReader ()
+If D1.HasRows Then
+MsgBox ("This record is already present in the database")
+IfConn. State = ConnectionState.Open ThenConn. Close ()
+Exit Sub
+EndIf
+
+IfConn. State = ConnectionState.Open ThenConn. Close ()
+Conn. Open ()
+        q1Var = "insert into Staff1 (“
+        q2Var = "Values (“
+        q1Var = q1Var &"Card Number"&","
+        q2Var = q2Var &"'"&UCase (TextBox8.Text) &"',"
+        q1Var = q1Var &"Staff Code"&","
+        q2Var = q2Var &"'"& TextBox1.Text &"',"
+        q1Var = q1Var &"Staff Name"&","
+        q2Var = q2Var &"'"& TextBox2.Text &"',"
+        q1Var = q1Var &"Address"&","
+        q2Var = q2Var &"'"&UCase (TextBox3.Text) &"',"
+        q1Var = q1Var &"State"&","
+        q2Var = q2Var &"'"&UCase (TextBox4.Text) &"',"
+        q1Var = q1Var &"Pin Code"&","
+        q2Var = q2Var &"'"& TextBox5.Text &"',"
+        q1Var = q1Var &"Mobile Number"&","
+        q2Var = q2Var &"'"& TextBox6.Text &"',"
+        q1Var = q1Var &"Email"&","
+        q2Var = q2Var &"'"&UCase (TextBox7.Text) &"',"
+        q1Var = q1Var &"Qualification"&","
+        q2Var = q2Var &"'"& ComboBox1.Text &"',"
+        q1Var = q1Var &"Designation"&")"
+        q2Var = q2Var &"'"& ComboBox2.Text &"')"
+Dim cmd1 AsNewSqlCommand (q1Var & q2Var, Conn)
+cmd1.ExecuteNonQuery ()
+IfConn. State = ConnectionState.Open ThenConn. Close ()
+MsgBox (" record saved successfully")
+        TextBox8.Text = ""
+        TextBox1.Text = ""
+        TextBox2.Text = ""
+        TextBox3.Text = ""
+        TextBox4.Text = ""
+        TextBox5.Text = ""
+        TextBox6.Text = ""
+        TextBox7.Text = ""
+        ComboBox1.Text = ""
+        ComboBox2.Text = ""
+
+EndSub
+
+PrivateSub Butmod_Click (ByVal sender AsSystem. Object, ByVal e As System.EventArgs) Handles Butmod.Click
+If vbNo = MsgBox ("are you sure you want modify this record", MsgBoxStyle.YesNo, "Delete") Then
+Exit Sub
+EndIf
+
+IfConn. State = ConnectionState.Open ThenConn. Close ()
+Conn. Open ()
+Dim Cmd1 AsNewSqlCommand ("Delete from Staff1 whereCard Number='"& pKVar &"'", Conn)
+Cmd1.ExecuteNonQuery ()
+IfConn. State = ConnectionState.Open ThenConn.Close()
+Conn. Open ()
+Save Records ()
+        Butnew.Enabled = True
+        Butsave.Enabled = False
+        Butdel.Enabled = False
+        Butmod.Enabled = False
+EndSub
+
+PrivateSub Button5_Click (ByVal sender AsSystem. Object, ByVal e As System.EventArgs) Handles Button5.Click
+DisRecords()
+EndSub
+SubDisRecords ()
+IfConn. State = ConnectionState.Open ThenConn. Close ()
+Conn. Close ()
+Dim DS1 AsNewDataset
+Dim adp AsNewSqlDataAdapter("select Card-Num-ber,StaffCode,StaffName,Address,State,PinCode,MobileNumber,Email,Qualification,Designation from Staff1", Conn)
+adp. Fill (DS1)
+        DG1.DataSource = DS1.Tables (0)
+IfConn. State = ConnectionState.Open ThenConn. Close ()
+EndSub
+
+PrivateSub TextBox5_LostFocus (ByVal sender AsObject, ByVal e As System.EventArgs) Handles TextBox5.LostFocus
+IfNotRegex.Match (TextBox5.Text, "^[0-9]*$", Regex-Options.IgnoreCase).Success Then
+MsgBox ("please enter number only!")
+TextBox5.Focus ()
+TextBox5.Clear ()
+EndIf
+EndSub
+
+PrivateSub GroupBox2_Enter (ByVal sender AsSystem. Object, ByVal e As System.EventArgs) Handles GroupBox2.Enter
+
+EndSub
+
+PrivateSub GroupBox1_Enter (ByVal sender AsSystem. Object, ByVal e As System.EventArgs) Handles GroupBox1.Enter
+
+EndSub
+EndClass
+
+Staff_List.vb:
+Imports System.Data.SqlClient
+
+PublicClassStaff list
+
+
+PrivateSub Button5_Click (ByVal sender AsSystem. Object, ByVal e As System.EventArgs) Handles Button5.Click
+DisRecords ()
+EndSub
+SubDisRecords ()
+IfConn. State = ConnectionState.Open ThenConn. Close ()
+Conn. Close ()
+Dim DS1 AsNewDataset
+Dim adp AsNewSqlDataAdapter("select Card-Num-ber,StaffCode,StaffName,Address,State,PinCode,MobileNumber,Email,Qualification,Designation from Staff1", Conn)
+adp.Fill(DS1)
+        DG1.DataSource = DS1.Tables (0)
+IfConn. State = ConnectionState.Open ThenConn. Close ()
+EndSub
+
+PrivateSub Button6_Click (ByVal sender AsSystem. Object, ByVal e As System.EventArgs) Handles Button6.Click
+Me. Close ()
+EndSub
+
+PrivateSub Staff_list_Load (ByVal sender AsSystem. Object, ByVal e As System.EventArgs) HandlesMyBase.Load
+DisRecords ()
+Me.WindowState = FormWindowState.Maximized
+EndSub
+EndClass
+
+
+Student_Attendance.vb:
+Imports System.Data.SqlClient
+
+PublicClassStu_Attendance
+
+PrivateSub Stu_Attendance_Load(ByVal sender AsSystem. Object, ByVal e As System.EventArgs) HandlesMyBase.Load
+        SerialPort1.PortName = "COM6"
+        SerialPort1.BaudRate = "9600"
+SerialPort1.Open ()
+
+
+IfConn. State = ConnectionState.Open ThenConn. Close()
+Conn. Open()
+Dim Cmd1 AsNewSqlCommand("select Course Name from Course Form", Conn)
+Dim D1 AsSqlDataReader = Cmd1.ExecuteReader ()
+While D1.Read
+ComboBox1.Items.Add (D1(0).To String)
+EndWhile
+IfConn. State = ConnectionState.Open ThenConn. Close()
+Conn. Open()
+Dim Cmd2 AsNewSqlCommand ("select Full Name from Subject Form", Conn)
+Dim D2 AsSqlDataReader = Cmd2.ExecuteReader ()
+While D2.Read
+ComboBox3.Items.Add (D2(0).To String)
+EndWhile
+
+Me.WindowState = FormWindowState.Maximized
+EndSub
+
+PrivateSub Button4_Click (ByVal sender AsSystem. Object, ByVal e As System.EventArgs) Handles Button4.Click
+
+SerialPort1.Close ()
+
+Me. Close ()
+EndSub
+
+
+PrivateSub Button1_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles Button1.Click
+Dim DS1 AsNewDataset
+Dim Tab1 AsData Table = DS1.Tables.Add ("AttnTab")
+Tab1.Columns.Add ("RegNo", Get Type (Long))
+Tab1.Columns.Add ("sName", Get Type (String))
+Tab1.Columns.Add ("Phone Number", Get Type (String))
+Tab1.Columns.Add ("Attendance", Get Type (String))
+
+IfConn. State = ConnectionState.Open ThenConn. Close()
+Conn.Open()
+Dim Cmd0 AsNewSqlCommand("Select regNo,StudentName,PhoneNumber from StudentDetails1  where  course Name='"& ComboBox1.Text &"' and semister='"& ComboBox2.Text &"' order by Reno", Conn)
+Dim D1 AsSqlDataReader = Cmd0.ExecuteReader()
+While D1.Read
+Dim dRow AsData Row = Tab1.NewRow
+dRow(0) = D1(0).To String
+dRow(1) = D1(1).To String
+dRow(2) = D1(2).To String
+dRow(3) = ""
+Tab1.Rows.Add (dRow)
+EndWhile
+IfConn. State = ConnectionState.Open ThenConn. Close()
+        DG1.DataSource = DS1.Tables(0)
+
+EndSub
+
+PrivateSub Butsave_Click(ByVal sender AsSystem. Object, ByVal e As System.EventArgs) Handles Butsave.Click
+If ComboBox3.Text = ""Then
+MsgBox ("Please enter the Subject Name")
+Exit Sub
+EndIf
+
+IfConn. State = ConnectionState.Open ThenConn. Close ()
+Conn. Open ()
+Dim cmd2 AsNewSqlCommand("Delete from AttendanceTab where course Name='"& ComboBox1.Text &"' and semister='"& ComboBox2.Text &"' and subname='"& ComboBox3.Text &"'  and aDate='"& Format(aDate. Value, "dd/MMM/yyyy") &"'", Conn)
+cmd2.ExecuteNonQuery ()
+If Conn.State = ConnectionState.Open ThenConn. Close ()
+
+
+ForEach r AsDataGridViewRowIn DG1.Rows
+Ifr.Cells(1).Value = ""ThenExit For
+            q1Var = "insert into AttendanceTab (“
+            q2Var = " values (“
+            q1Var = q1Var &"aDate"&","
+            q2Var = q2Var &"'"&Format(aDate. Value, "dd/MMM/yyyy") &"',"
+            q1Var = q1Var &"course name"&","
+            q2Var = q2Var &"'"& ComboBox1.Text &"',"
+            q1Var = q1Var &"Semister"&","
+            q2Var = q2Var &"'"& ComboBox2.Text &"',"
+            q1Var = q1Var &"SubName"&","
+            q2Var = q2Var &"'"& ComboBox3.Text &"',"
+            q1Var = q1Var &"RegNo"&","
+            q2Var = q2Var &""&r.Cells (0).Value &","
+            q1Var = q1Var &"Student Name"&","
+            q2Var = q2Var &"'"&r.Cells (1).Value &"',"
+            q1Var = q1Var &"Attendance"&")"
+            q2Var = q2Var &"'"&UCase(r.Cells(2).Value) &"')"
+
+IfConn. State = ConnectionState.Open ThenConn. Close ()
+Conn. Open()
+‘MsgBox (q1Var & q2Var)
+Dim cmd1 AsNewSqlCommand(q1Var & q2Var, Conn)
+cmd1.ExecuteNonQuery ()
+IfConn. State = ConnectionState.Open ThenConn. Close ()
+
+MsgBox("Records saved successfully")
+
+
+If (r.Cells(3).Value = "A") Then
+
+Dim a, b AsString
+Dim num AsString
+                a = Format(aDate. Value, "dd/MMM/yyyy")
+                b = r.Cells(0).Value
+num = r.Cells(2).Value
+SerialPort1.WriteLine ("AT"& vbCrLf)
+Threading.Thread.Sleep (3000)
+SerialPort1.WriteLine ("AT+CMGF=1"& vbCrLf)
+Threading.Thread.Sleep (3000)
+SerialPort1.WriteLine ("AT+CMGS="&Chr(34) & num & Chr(34) & vbCrLf) ' enter the mobile number whom you want to send the SMS
+Threading.Thread.Sleep (2000)
+Threading.Thread.Sleep (2000)
+SerialPort1.WriteLine ("Your student with regno" + b + "is absent on dated " + a)
+SerialPort1.WriteLine (Chr(26)) 'SMS sending
+MsgBox("Message Sent")
+
+
+EndIf
+
+Next
+EndSub
+
+PrivateSub Button3_Click (ByVal sender AsSystem. Object, ByVal e As System.EventArgs) Handles Button3.Click
+IfConn. State = ConnectionState.Open ThenConn. Close ()
+Conn. Open ()
+Dim DS1 AsNewDataset
+Dim adp AsNewSqlDataAdapter ("Select RegNo, studentName,Attendance From AttendanceTab where courseName='"& ComboBox1.Text &"' and semister='"& ComboBox2.Text &"' and subname='"& ComboBox3.Text &"' and aDate='"& Format(aDate.Value, "dd/MMM/yyyy") &"'  order by Reg-No", Conn)
+adp. Fill (DS1)
+        DG1.DataSource = DS1.Tables (0)
+IfConn. State = ConnectionState.Open ThenConn. Close ()
+
+EndSub
+
+PrivateSub DG1_CellContentClick (ByVal sender AsSystem. Object, ByVal e As System.Windows.Forms.DataGridViewCellEventArgs) Handles DG1.CellContentClick
+
+EndSub
+
+PrivateSub DG1_CellMouseClick (ByVal sender AsObject, ByVal e As System.Windows.Forms.DataGridViewCellMouseEventArgs) Handles DG1.CellMouseClick
+        TextBox1.Text = DG1.CurrentRow.Cells (2).Value
+EndSub
+EndClass
+
+Student_Attendance_List.vb:
+Imports System.Data.SqlClient
+
+PublicClassStudent_Attendance_List
+
+PrivateSub Student_Attendance_List_Load(ByVal sender As Sys-tem.Object, ByVal e As System.EventArgs) HandlesMyBase.Load
+IfConn. State = ConnectionState.Open ThenConn.Close ()
+Conn. Open ()
+Dim Cmd1 AsNewSqlCommand ("select Course Name from Course Form", Conn)
+Dim D1 AsSqlDataReader = Cmd1.ExecuteReader ()
+While D1.Read
+ComboBox1.Items.Add (D1(0).To String)
+EndWhile
+
+
+Me.WindowState = FormWindowState.Maximized
+
+
+EndSub
+
+PrivateSub Button5_Click (ByVal sender AsSystem. Object, ByVal e As System.EventArgs) Handles Button5.Click
+IfConn. State = ConnectionState.Open ThenConn. Close ()
+Conn. Open()
+Dim DS1 AsNewDataset
+Dim adp AsNewSqlDataAdapter("Select aDate,RegNo,StudentName,Attendance From AttendanceTab where course name='"& ComboBox1.Text &"' and Semister='"& ComboBox2.Text &"' and SubName='"& ComboBox3.Text &"'  order by RegNo", Conn)
+adp. Fill (DS1)
+        DG1.DataSource = DS1.Tables (0)
+IfConn. State = ConnectionState.Open ThenConn. Close()
+
+
+
+EndSub
+
+PrivateSub Button6_Click (ByVal sender AsSystem. Object, ByVal e As System.EventArgs) Handles Button6.Click
+Me. Close()
+EndSub
+
+PrivateSub ComboBox2_Leave(ByVal sender AsObject, ByVal e As Sys-tem.EventArgs) Handles ComboBox2.Leave
+IfConn. State = ConnectionState.Open ThenConn. Close ()
+Conn. Open()
+Dim Cmd3 AsNewSqlCommand ("select Full Name from Subject Form where Semister='"& ComboBox2.Text &"'", Conn)
+Dim D3 AsSqlDataReader = Cmd3.ExecuteReader ()
+While D3.Read
+ComboBox3.Items.Add (D3(0).To String)
+EndWhile
+EndSub
+
+PrivateSub ComboBox2_SelectedIndexChanged (ByVal sender AsSystem. Object, ByVal e As System.EventArgs) Handles Com-boBox2.SelectedIndexChanged
+
+EndSub
+EndClass
+
+Student_Attendance_Summary.vb:
+Imports System.Data.SqlClient
+
+PublicClassStudent_Attendance_Summary
+
+PrivateSub Student_Attendance_Summary_Load(ByVal sender As Sys-tem.Object, ByVal e As System.EventArgs) HandlesMyBase.Load
+IfConn. State = ConnectionState.Open ThenConn. Close()
+Conn. Open()
+Dim Cmd1 AsNewSqlCommand("select Course Name from Course Form", Conn)
+Dim D1 AsSqlDataReader = Cmd1.ExecuteReader ()
+While D1.Read
+ComboBox1.Items.Add (D1(0).To String)
+EndWhile
+IfConn. State = ConnectionState.Open ThenConn. Close()
+Conn. Open()
+Dim Cmd2 AsNewSqlCommand("select Full Name from Subject Form", Conn)
+
+Me.WindowState = FormWindowState.Maximized
+EndSub
+
+PrivateSub Button5_Click(ByVal sender AsSystem. Object, ByVal e As System.EventArgs) Handles Button5.Click
+IfConn. State = ConnectionState.Open ThenConn. Close ()
+Conn. Open()
+Dim DS1 AsNewDataset
+Dim adp AsNewSqlDataAdapter ("Select subName as 'Subject Name’, count(Attendance) as 'Total Attendance' From AttendanceTab where regNo='"& ComboBox3.Text &"' and  attendance='P' group by subName  order by subName", Conn)
+adp. Fill(DS1)
+        DG1.DataSource = DS1.Tables(0)
+IfConn. State = ConnectionState.Open ThenConn. Close()
+EndSub
+
+PrivateSub Button6_Click (ByVal sender AsSystem. Object, ByVal e As System.EventArgs) Handles Button6.Click
+Me. Close()
+EndSub
+
+PrivateSub Button1_Click (ByVal sender AsSystem. Object, ByVal e As System.EventArgs) Handles Button1.Click
+IfConn. State = ConnectionState.Open ThenConn. Close()
+Conn.Open ()
+Dim Cmd2 AsNewSqlCommand ("select RegNo from StudentDetails1 where CourseName='"& ComboBox1.Text &"' and Semister='"& ComboBox2.Text &"'", Conn)
+Dim D2 AsSqlDataReader = Cmd2.ExecuteReader ()
+While D2.Read
+ComboBox3.Items.Add (D2(0).To String)
+EndWhile
+IfConn. State = ConnectionState.Open ThenConn. Close()
+
+EndSub
+EndClass
+
+
+Student_List.vb:
+Imports System.Data.SqlClient
+
+PublicClassStudent List
+
+PrivateSub Button5_Click(ByVal sender AsSystem. Object, ByVal e As System.EventArgs) Handles Button5.Click
+disRecords ()
+EndSub
+
+SubdisRecords()
+IfConn. State = ConnectionState.Open ThenConn. Close()
+Conn. Open()
+Dim DS1 AsNewDataset
+Dim adp AsNewSqlDataAdapter("select Reg-No,StudentName,ParentName,Gender,Address,State,PinCode,PhoneNumber,Email,CourseName,Semister,img from StudentDetails1", Conn)
+adp. Fill(DS1)
+        DG1.AllowUserToAddRows = False
+        DG1.RowTemplate.Height = 50
+Dim imgc AsNewDataGridViewImageColumn
+        DG1.DataSource = DS1.Tables (0)
+Imgc = DG1.Columns (11)
+        imgc.ImageLayout = DataGridViewImageCellLayout.Stretch
+IfConn. State = ConnectionState.Open ThenConn. Close()
+EndSub
+
+PrivateSub Button6_Click (ByVal sender AsSystem. Object, ByVal e As System.EventArgs) Handles Button6.Click
+Me. Close()
+EndSub
+
+PrivateSub Student_List_Load (ByVal sender AsSystem. Object, ByVal e As System.EventArgs) HandlesMyBase.Load
+disRecords()
+Me.WindowState = FormWindowState.Maximized
+EndSub
+EndClass
+
+
+Student_Details.vb:
+Imports System.Data.SqlClient
+Imports System.IO
+Imports System.Text.RegularExpressions
+
+PublicClassStudentdeltails
+Dim pKVar AsString
+
+PrivateSub Button5_Click (ByVal sender AsSystem. Object, ByVal e As System.EventArgs) Handles Button5.Click
+DisRecords ()
+EndSub
+
+SubdisRecords ()
+IfConn. State = ConnectionState.Open ThenConn. Close ()
+Conn. Open ()
+Dim DS1 AsNewDataset
+Dim adp AsNewSqlDataAdapter("select Reg-No,StudentName,ParentName,Gender,Address,State,PinCode,PhoneNumber,Email,CourseName,Semister,img from StudentDetails1", Conn)
+adp. Fill (DS1)
+        DG1.AllowUserToAddRows = False
+        DG1.RowTemplate.Height = 50
+Dim imgc AsNewDataGridViewImageColumn
+        DG1.DataSource = DS1.Tables (0)
+imgc = DG1.Columns(11)
+        imgc.ImageLayout = DataGridViewImageCellLayout.Stretch
+IfConn. State = ConnectionState.Open ThenConn. Close()
+EndSub
+
+PrivateSub Button2_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles Butsave.Click
+Save Record()
+EndSub
+SubSave Record()
+If TextBox1.Text = ""Then
+MsgBox ("Please enter the Register Number")
+Exit Sub
+EndIf
+If TextBox2.Text = ""Then
+MsgBox ("Please enter the Name")
+Exit Sub
+EndIf
+If TextBox3.Text = ""Then
+MsgBox ("Please enter the Parent Name")
+Exit Sub
+EndIf
+If ComboBox3.Text = ""Then
+MsgBox ("Please enter the Gender")
+Exit Sub
+EndIf
+If RichTextBox1.Text = ""Then
+MsgBox ("Please enter the Address")
+Exit Sub
+EndIf
+If TextBox4.Text = ""Then
+MsgBox ("Please enter the State")
+Exit Sub
+EndIf
+If TextBox5.Text = ""Then
+MsgBox ("Please enter the Pin code")
+Exit Sub
+EndIf
+If TextBox6.Text = ""Then
+MsgBox ("Please enter the Phone Number")
+Exit Sub
+EndIf
+If TextBox7.Text = ""Then
+MsgBox ("Please enter the Email Id")
+Exit Sub
+EndIf
+If ComboBox1.Text = ""Then
+MsgBox ("Please enter the Course Name")
+Exit Sub
+EndIf
+If ComboBox2.Text = ""Then
+MsgBox ("Please enter the Name")
+Exit Sub
+EndIf
+IfConn. State = ConnectionState.Open ThenConn.Close()
+Conn. Open ()
+Dim Cmd0 AsNewSqlCommand ("select * from StudentDetails1 where Reg-No='"&UCase (TextBox1.Text) &"'", Conn)
+Dim D1 AsSqlDataReader = Cmd0.ExecuteReader ()
+If D1.HasRows Then
+MsgBox ("This record is allready present in the database")
+IfConn. State = ConnectionState.Open ThenConn. Close()
+Exit Sub
+EndIf
+
+Dim command AsNewSqlCommand("insert into StudentDetails1 (Reg-No,StudentName,ParentName,Gender,Address,State,PinCode,PhoneNumber,Email,CourseName,Semister,img) val-ues(@RegNo,@StudentName,@ParentName,@Gender,@Address,@State,@PinCode,@PhoneNumber,@Email,@CourseName,@Semister,@img)", Conn)
+Dim ms AsNewMemory Stream
+PictureBox1.Image.Save (ms, PictureBox1.Image.RawFormat)
+command.Parameters.Add ("@RegNo", SqlDbType.NVarChar).Value = Text-Box1.Text
+command.Parameters.Add ("@Student Name", SqlDbType.NVarChar).Value = TextBox2.Text
+command.Parameters.Add ("@Parent Name", SqlDbType.NVarChar).Value = TextBox3.Text
+command.Parameters.Add ("@Gender", SqlDbType.NVarChar).Value = Com-boBox3.Text
+command.Parameters.Add ("@Address", SqlDbType.NVarChar).Value = RichTextBox1.Text
+command.Parameters.Add ("@State", SqlDbType.NVarChar).Value = Text-Box4.Text
+command.Parameters.Add ("@Pin Code", SqlDbType.NVarChar).Value = TextBox5.Text
+command.Parameters.Add ("@Phone Number", SqlDbType.NVarChar).Value = TextBox6.Text
+command.Parameters.Add ("@Email", SqlDbType.NVarChar).Value = Text-Box7.Text
+command.Parameters.Add ("@Course Name", SqlDbType.NVarChar).Value = ComboBox1.Text
+command.Parameters.Add ("@Semister", SqlDbType.NVarChar).Value = ComboBox2.Text
+command.Parameters.Add ("@img", SqlDbType.Image).Value = ms.ToArray
+If Conn.State = ConnectionState.Open ThenConn. Close ()
+Conn. Open ()
+Ifcommand.ExecuteNonQuery () = 1 Then
+MsgBox ("Student Details saved")
+Else
+MsgBox ("Student Details not saved")
+EndIf
+IfConn. State = ConnectionState.Open ThenConn. Close()
+DisRecords ()
+
+EndSub
+
+
+
+PrivateSub Button1_Click (ByVal sender AsSystem. Object, ByVal e As System.EventArgs) Handles Butnew.Click
+
+        TextBox2.Text = ""
+        TextBox3.Text = ""
+        ComboBox3.Text = ""
+        RichTextBox1.Text = ""
+        TextBox4.Text = ""
+        TextBox5.Text = ""
+        TextBox6.Text = ""
+        TextBox7.Text = ""
+        ComboBox1.Text = ""
+        ComboBox2.Text = ""
+        PictureBox1.Image = Nothing
+NewRec ()
+
+
+EndSub
+
+PrivateSub Button4_Click(ByVal sender AsSystem. Object, ByVal e As System.EventArgs) Handles Butdel.Click
+
+If vbNo = MsgBox ("are you sure you want delete this record", MsgBoxStyle.YesNo, "Delete") ThenExit Sub
+IfConn. State = ConnectionState.Open ThenConn. Close()
+Conn. Open()
+Dim Cmd1 AsNewSqlCommand("delete from StudentDetails1 where Reg-No='"& pKVar &"'", Conn)
+Cmd1.ExecuteNonQuery ()
+IfConn. State = ConnectionState.Open ThenConn. Close()
+disRecords()
+        Butnew.Enabled = True
+        Butsave.Enabled = False
+        Butmod.Enabled = False
+        Butdel.Enabled = False
+EndSub
+
+PrivateSub Butmod_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles Butmod.Click
+
+If vbNo = MsgBox ("are you sure you want modify this record", MsgBoxStyle.YesNo, "Delete") Then
+Exit Sub
+EndIf
+
+IfConn. State = ConnectionState.Open ThenConn. Close ()
+Conn. Open ()
+Dim Cmd1 AsNewSqlCommand ("delete from StudentDetails1 where Reg-No='"& pKVar &"'", Conn)
+Cmd1.ExecuteNonQuery ()
+IfConn. State = ConnectionState.Open ThenConn.Close()
+Conn. Open ()
+Save Record()
+        Butnew.Enabled = True
+        Butsave.Enabled = False
+        Butmod.Enabled = False
+        Butdel.Enabled = False
+EndSub
+
+PrivateSub DataGridView1_CellContentClick (ByVal sender AsSystem. Object, ByVal e As System.Windows.Forms.DataGridViewCellEventArgs) Handles DG1.CellContentClick
+pKVar = DG1.CurrentRow.Cells(0).Value
+IfConn. State = ConnectionState.Open ThenConn. Close ()
+Conn. Open ()
+Dim Cmd0 AsNewSqlCommand ("select * from StudentDetails1 where Reg-No='"& pKVar &"'", Conn)
+Dim D1 AsSqlDataReader = Cmd0.ExecuteReader ()
+If D1.HasRows Then
+D1.Read()
+            TextBox1.Text = D1(0).To String
+            TextBox2.Text = D1(1).To String
+            TextBox3.Text = D1(2).To String
+            ComboBox3.Text = D1(3).To String
+            RichTextBox1.Text = D1(4).To String
+            TextBox4.Text = D1(5).To String
+            TextBox5.Text = D1(6).To String
+            TextBox6.Text = D1(7).To String
+            TextBox7.Text = D1(8).To String
+            ComboBox1.Text = D1(9).To String
+            ComboBox2.Text = D1(10).To String
+            Butnew.Enabled = True
+            Butsave.Enabled = False
+            Butmod.Enabled = True
+            Butdel.Enabled = True
+Else
+            TextBox1.Text = ""
+            TextBox2.Text = ""
+            Butnew.Enabled = True
+            Butsave.Enabled = False
+            Butmod.Enabled = False
+            Butdel.Enabled = False
+EndIf
+IfConn. State = ConnectionState.Open ThenConn. Close ()
+EndSub
+
+PrivateSub Button6_Click (ByVal sender AsSystem. Object, ByVal e As System.EventArgs) Handles Button6.Click
+Me. Close ()
+EndSub
+SubNewRec ()
+
+IfConn. State = ConnectionState.Open ThenConn. Close ()
+Conn. Open ()
+Dim Cmd0 AsNewSqlCommand("select max(RegNo) from StudentDetails1", Conn)
+Dim D1 AsSqlDataReader = Cmd0.ExecuteReader ()
+If D1.HasRows Then
+D1.Read()
+            TextBox1.Text = IIf(IsDBNull(D1(0)), 10000000, D1(0)) + 1
+Else
+            TextBox1.Text = "10001"
+EndIf
+TextBox2.Focus ()
+EndSub
+
+PrivateSub GroupBox2_Enter(ByVal sender AsSystem. Object, ByVal e As System.EventArgs) Handles GroupBox2.Enter
+DisRecords ()
+Me.WindowState = FormWindowState.Maximized
+EndSub
+
+PrivateSub Button1_Click_1(ByVal sender AsSystem. Object, ByVal e As System.EventArgs) Handles Button1.Click
+Try
+With OpenFileDialog1
+                .Filter = ("Images |*.png; *.bmp; *.jpg; *.jpeg; *.gif; *.ico;")
+                .Filter Index = 4
+EndWith
+            OpenFileDialog1.FileName = ""
+IfOpenFileDialog1.ShowDialog () = DialogResult.OK Then
+                PictureBox1.Image = Image.FromFile (OpenFileDia-log1.FileName)
+EndIf
+Catch ex AsException
+MsgBox (ex.ToString)
+EndTry
+EndSub
+
+
+
+PrivateSub TextBox2_LostFocus (ByVal sender AsObject, ByVal e As System.EventArgs) Handles TextBox2.LostFocus
+IfNotRegex.Match (TextBox2.Text, "^[a-z. ]*$", Regex-Options.IgnoreCase).Success Then
+MsgBox ("please enter alpha text only!")
+TextBox2.Focus ()
+TextBox2.Clear ()
+
+EndIf
+EndSub
+
+
+
+PrivateSub TextBox3_LostFocus(ByVal sender AsObject, ByVal e As Sys-tem.EventArgs) Handles TextBox3.LostFocus
+IfNotRegex.Match (TextBox3.Text, "^[a-z. ]*$", Regex-Options.IgnoreCase).Success Then
+MsgBox("please enter alpha text only!")
+TextBox3.Focus ()
+TextBox3.Clear ()
+
+EndIf
+EndSub
+PrivateSub TextBox6_LostFocus (ByVal sender AsObject, ByVal e As System.EventArgs) Handles TextBox6.LostFocus
+
+DimPhone NumberAsNewRegex ("^([6-9]{1})([0-9]{9})")
+        TextBox6.MaxLength = 10
+
+IfPhoneNumber.IsMatch (TextBox6.Text) Then
+TextBox7.Focus ()
+Else
+MsgBox ("Not Valid Phone Number")
+            TextBox6.Text = ""
+TextBox6.Focus ()
+EndIf
+EndSub
+
+
+PrivateSub TextBox5_LostFocus (ByVal sender AsObject, ByVal e As System.EventArgs) Handles TextBox5.LostFocus
+IfNotRegex.Match (TextBox5.Text, "^[0-9 ]*$", Regex-Options.IgnoreCase).Success Then
+MsgBox("please enter number only!")
+TextBox5.Focus ()
+TextBox5.Clear ()
+EndIf
+EndSub
+
+PrivateSub TextBox7_LostFocus (ByVal sender AsObject, ByVal e As System.EventArgs) Handles TextBox7.LostFocus
+IfNotRegex.Match (TextBox7.Text, "^[a-z.@.0-9 ]*$", Regex-Options.IgnoreCase).Success Then
+MsgBox("please enter alpha numeric text only!")
+TextBox7.Focus ()
+TextBox7.Clear ()
+EndIf
+EndSub
+
+
+PrivateSub Studentdeltails_Load (ByVal sender AsSystem. Object, ByVal e As System.EventArgs) HandlesMyBase.Load
+NewRec()
+EndSub
+EndClass
+
+Subject_Form.vb:
+Imports System.Data.SqlClient
+
+PublicClassSubject Form
+Dim pkVar AsString
+
+PrivateSub Butnew_Click (ByVal sender AsSystem. Object, ByVal e As System.EventArgs) Handles Butnew.Click
+        TextBox1.Text = ""
+        TextBox2.Text = ""
+        ComboBox1.Text = ""
+        ComboBox2.Text = ""
+EndSub
+
+PrivateSub Butsave_Click (ByVal sender AsSystem. Object, ByVal e As System.EventArgs) Handles Butsave.Click
+Save Records ()
+EndSub
+SubSave Records ()
+If TextBox1.Text = ""Then
+MsgBox ("Please enter the necessary details")
+Exit Sub
+EndIf
+IfConn. State = ConnectionState.Open ThenConn. Close()
+Conn. Open ()
+Dim Cmd0 AsNewSqlCommand ("select * from Subject Form where Sub-jectShortName='"&UCase (TextBox1.Text) &"'", Conn)
+Dim D1 AsSqlDataReader = Cmd0.ExecuteReader ()
+If D1.HasRows Then
+MsgBox("This record is already present in the database")
+IfConn. State = ConnectionState.Open ThenConn. Close ()
+Exit Sub
+EndIf
+
+IfConn. State = ConnectionState.Open ThenConn. Close()
+Conn. Open()
+        q1Var = "insert into SubjectForm("
+        q2Var = "Values("
+        q1Var = q1Var &"Course Name"&","
+        q2Var = q2Var &"'"&UCase (ComboBox1.Text) &"',"
+        q1Var = q1Var &"Semester"&","
+        q2Var = q2Var &"'"& ComboBox2.Text &"',"
+        q1Var = q1Var &"SubjectShortName"&","
+        q2Var = q2Var &"'"& TextBox1.Text &"',"
+        q1Var = q1Var &"Full Name"&")"
+        q2Var = q2Var &"'"& TextBox2.Text &"')"
+Dim cmd1 AsNewSqlCommand (q1Var & q2Var, Conn)
+cmd1.ExecuteNonQuery ()
+IfConn. State = ConnectionState.Open ThenConn. Close()
+MsgBox(" record saved successfully")
+        ComboBox1.Text = ""
+        ComboBox2.Text = ""
+        TextBox1.Text = ""
+        TextBox2.Text = ""
+EndSub
+
+PrivateSub Butdel_Click (ByVal sender AsSystem. Object, ByVal e As System.EventArgs) Handles Butdel.Click
+If vbNo = MsgBox ("are you sure you want delete this record", MsgBoxStyle.YesNo, "Delete") ThenExit Sub
+IfConn. State = ConnectionState.Open ThenConn. Close()
+Conn. Open()
+Dim Cmd1 AsNewSqlCommand("delete from Subject Form where Course Name='"& pKVar &"'", Conn)
+Cmd1.ExecuteNonQuery ()
+IfConn. State = ConnectionState.Open ThenConn. Close ()
+DisRecords()
+        Butnew.Enabled = True
+        Butsave.Enabled = False
+        Butmod.Enabled = False
+        Butdel.Enabled = False
+EndSub
+
+PrivateSub Butmod_Click (ByVal sender AsSystem. Object, ByVal e As System.EventArgs) Handles Butmod.Click
+If vbNo = MsgBox ("are you sure you want modify this record", MsgBoxStyle.YesNo, "Delete") Then
+Exit Sub
+EndIf
+
+IfConn. State = ConnectionState.Open ThenConn. Close()
+Conn. Open()
+Dim Cmd1 AsNewSqlCommand ("delete from Subject Form where Course Name='"& pKVar &"'", Conn)
+Cmd1.ExecuteNonQuery ()
+IfConn. State = ConnectionState.Open ThenConn. Close ()
+Conn. Open()
+Save Records()
+        Butnew.Enabled = True
+        Butsave.Enabled = False
+        Butmod.Enabled = False
+        Butdel.Enabled = False
+EndSub
+
+PrivateSub Button5_Click(ByVal sender AsSystem. Object, ByVal e As System.EventArgs) Handles Button5.Click
+DisRecords()
+EndSub
+SubDisRecords ()
+IfConn. State = ConnectionState.Open ThenConn. Close()
+Conn. Close()
+Dim DS1 AsNewDataset
+Dim adp AsNewSqlDataAdapter("select CourseName,Semister, Sub-jectShortName, Full Name from Subject Form ", Conn)
+adp. Fill(DS1)
+        DG1.DataSource = DS1.Tables (0)
+IfConn. State = ConnectionState.Open ThenConn.Close()
+EndSub
+
+PrivateSub DG1_CellContentClick (ByVal sender AsSystem. Object, ByVal e As System.Windows.Forms.DataGridViewCellEventArgs) Handles DG1.CellContentClick
+
+pkVar = DG1.CurrentRow.Cells(0).Value
+IfConn. State = ConnectionState.Open ThenConn. Close()
+Conn. Open()
+Dim Cmd0 AsNewSqlCommand("select * from Subject Form where Course-Name='"& pkVar &"'", Conn)
+Dim D1 AsSqlDataReader = Cmd0.ExecuteReader ()
+If D1.HasRows Then
+D1.Read()
+            ComboBox1.Text = D1(0).ToString
+            ComboBox2.Text = D1(1).ToString
+            TextBox1.Text = D1(2).ToString
+            TextBox2.Text = D1(3).ToString
+            Butnew.Enabled = True
+            Butsave.Enabled = False
+            Butmod.Enabled = True
+            Butdel.Enabled = True
+Else
+            TextBox1.Text = ""
+            TextBox2.Text = ""
+            Butnew.Enabled = True
+            Butsave.Enabled = False
+            Butmod.Enabled = False
+            Butdel.Enabled = False
+EndIf
+IfConn. State = ConnectionState.Open ThenConn. Close()
+EndSub
+
+PrivateSub Button6_Click(ByVal sender AsSystem. Object, ByVal e As System.EventArgs) Handles Button6.Click
+Me. Close()
+EndSub
+
+PrivateSub SubjectForm_Load (ByVal sender AsSystem. Object, ByVal e As System.EventArgs) HandlesMyBase.Load
+DisRecords()
+Me.WindowState = FormWindowState.Maximized
+
+EndSub
+
+PrivateSub ComboBox1_SelectedIndexChanged (ByVal sender AsSystem. Object, ByVal e As System.EventArgs) Handles Com-boBox1.SelectedIndexChanged
+
+EndSub
+EndClass
+
+
+
+VERIFICATION & VALIDATION:
+
+
+Alphabet validation:
+PrivateSub TextBox2_LostFocus (By Val sender AsObject, By Val e As System.EventArgs) Handles TextBox2.LostFocus
+IfNotRegex.Match (TextBox2.Text, "^[a-z. ]*$", RegexOptions.IgnoreCase).Success Then
+MsgBox ("please enter alpha text only!")
+TextBox2.Focus ()
+
+EndIf
+EndSub
+
+
+PrivateSub TextBox2_TextChanged (By Val sender AsSystem. Object, By Val e As Sys-tem.EventArgs) Handles TextBox2.TextChanged
+
+EndSub
+
+
+
+Number Validation:
+
+PrivateSub TextBox6_LostFocus (ByVal sender AsObject, ByVal e As System.EventArgs) Handles TextBox6.LostFocus
+
+DimPhone NumberAsNewRegex ("^([6-9]{1})([0-9]{9})")
+        TextBox6.MaxLength = 10
+
+IfPhoneNumber.IsMatch (TextBox6.Text) Then
+TextBox7.Focus ()
+Else
+MsgBox ("Not Valid Phone Number")
+            TextBox6.Text = ""
+TextBox6.Focus ()
+EndIf
+EndSub
+
+
+Email Validation:
+
+PrivateSub TextBox8_LostFocus (By Val sender AsObject, By Val e As System.EventArgs) Handles TextBox8.LostFocus
+IfNotRegex.Match (TextBox8.Text, "^[a-z.@. ]*$", RegexOptions.IgnoreCase).Success Then
+MsgBox ("please enter numbers only!")
+TextBox8.Focus ()
+
+EndIf
+EndSub
+
+PrivateSub TextBox8_TextChanged (By Val sender AsSystem. Object, ByVal e As Sys-tem.EventArgs) Handles TextBox8.TextChanged
+
+EndSub
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
